@@ -149,7 +149,7 @@ export default function Header() {
                 <span>{displayName}</span>
               </Link>
               <button
-                onClick={() => { window.location.href = '/api/auth/signout'; }}
+                onClick={() => { window.location.href = '/api/auth/signout?callbackUrl=/'; }}
                 className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Вихід

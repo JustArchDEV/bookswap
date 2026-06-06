@@ -210,7 +210,7 @@ export default async function Home() {
                   </Button>
                 </Link>
                 <Link href="/login" className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full border-white/70 text-white hover:bg-white/10">
+                  <Button size="lg" variant="outline" className="w-full border-2 border-white text-white bg-white/20 hover:bg-white/30">
                     Увійти
                   </Button>
                 </Link>
