@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
 import { BookCard } from '@/components/books/BookCard';
 import { StarRating } from '@/components/reviews/StarRating';

@@ -2,7 +2,6 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import ProfileEditor from '@/components/profile/ProfileEditor';
-import Image from 'next/image';
 
 export default async function ProfilePage() {
   const session = await auth();
