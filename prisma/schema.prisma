@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum BookStatus {
+  AVAILABLE
+  RESERVED
+  EXCHANGED
+}
+
+enum BookCondition {
+  NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id                 String     @id @default(cuid())
+  name               String
+  email              String     @unique
+  password           String
+  avatar             String?
+  bio                String?
+  city               String?
+  role               UserRole   @default(USER)
+  isBlocked          Boolean    @default(false)
+  books              Book[]     @relation("UserBooks")
+  requestedExchanges Exchange[] @relation("RequesterExchanges")
+  ownedExchanges     Exchange[] @relation("OwnerExchanges")
+  reviewsGiven       Review[]   @relation("ReviewsGiven")
+  reviewsReceived    Review[]   @relation("ReviewsReceived")
+  messages           Message[]
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  @@index([role])
+  @@index([isBlocked])
+}
+
+model Genre {
+  id    String @id @default(cuid())
+  name  String @unique
+  books Book[]
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Book {
+  id            String         @id @default(cuid())
+  title         String
+  author        String
+  description   String
+  language      String?
+  publishedYear Int?
+  status        BookStatus     @default(AVAILABLE)
+  condition     BookCondition
+  owner         User           @relation("UserBooks", fields: [ownerId], references: [id])
+  ownerId       String
+  genre         Genre          @relation(fields: [genreId], references: [id])
+  genreId       String
+  images        BookImage[]
+  exchangesAsRequestedBook Exchange[] @relation("RequestedBook")
+  exchangesAsOfferedBook   Exchange[] @relation("OfferedBook")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([ownerId])
+  @@index([genreId])
+  @@index([status])
+  @@index([condition])
+  @@index([title])
+  @@index([author])
+}
+
+model BookImage {
+  id        String   @id @default(cuid())
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    String
+  url       String
+  publicId  String?
+  position  Int      @default(0)
+  isCover   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([bookId])
+}
+
+model Exchange {
+  id              String         @id @default(cuid())
+  requester       User           @relation("RequesterExchanges", fields: [requesterId], references: [id])
+  requesterId     String
+  owner           User           @relation("OwnerExchanges", fields: [ownerId], references: [id])
+  ownerId         String
+  requestedBook   Book           @relation("RequestedBook", fields: [requestedBookId], references: [id])
+  requestedBookId String
+  offeredBook     Book           @relation("OfferedBook", fields: [offeredBookId], references: [id])
+  offeredBookId   String
+  status          ExchangeStatus @default(PENDING)
+  completedAt     DateTime?
+  messages        Message[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([requesterId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  exchange   Exchange  @relation(fields: [exchangeId], references: [id])
+  exchangeId String
+  sender     User      @relation(fields: [senderId], references: [id])
+  senderId   String
+  content    String
+  isRead     Boolean   @default(false)
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([exchangeId])
+  @@index([createdAt])
+  @@index([isRead])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  author      User     @relation("ReviewsGiven", fields: [authorId], references: [id])
+  authorId    String
+  target      User     @relation("ReviewsReceived", fields: [targetId], references: [id])
+  targetId    String
+  exchangeId  String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  @@unique([authorId, exchangeId])
+  @@index([targetId])
+  @@index([authorId])
+}
