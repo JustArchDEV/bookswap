@@ -156,7 +156,7 @@ export default function Header() {
               </Link>
 
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => signOut({ redirectTo: '/' })}
                 className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Вихід
@@ -194,7 +194,7 @@ export default function Header() {
                   )}
                 </Link>
                 <Link href="/dashboard/profile" prefetch onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50">Профіль</Link>
-                <button onClick={() => { setMenuOpen(false); signOut({ callbackUrl: '/' }); }} className="w-full text-left rounded-lg px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50">Вийти</button>
+                <button onClick={() => { setMenuOpen(false); signOut({ redirectTo: '/' }); }} className="w-full text-left rounded-lg px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50">Вийти</button>
               </>
             )}
             {!isAuthenticated && (
