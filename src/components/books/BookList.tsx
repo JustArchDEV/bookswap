@@ -61,7 +61,27 @@ export function BookList({
           <option value="">Усі жанри</option>
           {genres.map((genre) => <option key={genre.id} value={genre.id}>{genre.name}</option>)}
         </select>
-        <input name="language" defaultValue={filters.language ?? ''} placeholder="Мова" className="rounded-xl border border-slate-300 px-3 py-2" />
+        <select name="language" defaultValue={filters.language ?? ''} className="rounded-xl border border-slate-300 px-3 py-2">
+  <option value="">Усі мови</option>
+  <option value="uk">Українська</option>
+  <option value="en">Англійська</option>
+  <option value="de">Німецька</option>
+  <option value="fr">Французька</option>
+  <option value="pl">Польська</option>
+  <option value="cs">Чеська</option>
+  <option value="it">Італійська</option>
+  <option value="es">Іспанська</option>
+  <option value="pt">Португальська</option>
+  <option value="nl">Нідерландська</option>
+  <option value="sv">Шведська</option>
+  <option value="no">Норвезька</option>
+  <option value="da">Данська</option>
+  <option value="fi">Фінська</option>
+  <option value="hu">Угорська</option>
+  <option value="ro">Румунська</option>
+  <option value="bg">Болгарська</option>
+  <option value="other">Інша</option>
+</select>
         <select name="condition" defaultValue={filters.condition ?? ''} className="rounded-xl border border-slate-300 px-3 py-2">
           <option value="">Стан</option>
           <option value="NEW">Нова</option>
