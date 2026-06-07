@@ -12,31 +12,16 @@ export type CloudinaryUploadResult = {
   url: string;
 };
 
-console.log('Cloudinary config:', {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  hasSecret: !!process.env.CLOUDINARY_API_SECRET,
-});
-
 export async function uploadImage(file: Buffer, folder = 'bookswap/books'): Promise<CloudinaryUploadResult> {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder,
-        resource_type: 'image',
-      },
-      (error, result) => {
-        if (error || !result) {
-          reject(error ?? new Error('Cloudinary upload failed'));
-          return;
-        }
+  const base64 = file.toString('base64');
+  const dataUri = `data:image/jpeg;base64,${base64}`;
 
-        resolve(result as CloudinaryUploadResult);
-      }
-    );
-
-    uploadStream.end(file);
+  const result = await cloudinary.uploader.upload(dataUri, {
+    folder,
+    resource_type: 'image',
   });
+
+  return result as CloudinaryUploadResult;
 }
 
 export async function deleteImage(publicId: string): Promise<void> {
